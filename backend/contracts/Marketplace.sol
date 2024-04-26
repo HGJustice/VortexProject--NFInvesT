@@ -43,6 +43,13 @@ contract Marketplace {
         );
     }
 
+    function depositToken(uint amount) external {
+        require(amount > 0, "invalid amount");
+        IERC20 token = IERC20(tokenContract.getTokens(msg.sender));
+        bool sent = token.transferFrom(msg.sender, address(this), amount);
+        require(sent, "Token transfer failed");
+    }
+
     function listToken(uint _tokenAmount, uint _price) external {
         require(_tokenAmount > 0, "please input correct amount");
         require(
@@ -72,12 +79,9 @@ contract Marketplace {
     }
 
     function buyToken(uint tokenID) external payable {
-        require(tokenID <= currentListingId, "invalid listing");
+        // require(tokenID <= currentListingId, "invalid listing");
         Listing storage current = idToListings[tokenID];
-        require(
-            msg.value >= current.price.getConversionRate(priceFeed),
-            "invalid amount to buy share"
-        );
+        // require(msg.value >= current.price.getConversionRate(priceFeed), "invalid amount to buy share");
 
         IERC20(current.tokenAddress).transfer(msg.sender, current.amount);
         payable(current.tokenSeller).transfer(msg.value);
@@ -91,10 +95,5 @@ contract Marketplace {
 
         delete idToListings[tokenID];
         delete listings[current.tokenSeller][tokenID];
-    }
-
-    function convertTest(uint amount) public view returns (uint256) {
-        uint256 converted = amount.getConversionRate(priceFeed);
-        return converted;
     }
 }
