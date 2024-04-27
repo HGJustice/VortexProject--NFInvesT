@@ -1,0 +1,26 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BusinessManagement
+    network: scroll-sepolia
+    source:
+      address: "0x0A0E8290c4eBb871876Ad4E04110ca5DF023Ea4b"
+      abi: BusinessManagement
+      startBlock: 4098666
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BusinessCreated
+      abis:
+        - name: BusinessManagement
+          file: ./abis/BusinessManagement.json
+      eventHandlers:
+        - event: BusinessCreated(uint256,string,string,string,uint256,string,string,string)
+          handler: handleBusinessCreated
+      file: ./src/business-management.ts
