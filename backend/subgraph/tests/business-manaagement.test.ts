@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { BigInt } from "@graphprotocol/graph-ts"
 import { BusinessCreated } from "../generated/schema"
-import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManagement/BusinessManagement"
-import { handleBusinessCreated } from "../src/business-management"
-import { createBusinessCreatedEvent } from "./business-management-utils"
+import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManaagement/BusinessManaagement"
+import { handleBusinessCreated } from "../src/business-manaagement"
+import { createBusinessCreatedEvent } from "./business-manaagement-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

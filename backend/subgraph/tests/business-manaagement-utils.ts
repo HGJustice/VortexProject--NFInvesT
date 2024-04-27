@@ -1,6 +1,6 @@
 import { newMockEvent } from "matchstick-as"
 import { ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { BusinessCreated } from "../generated/BusinessManagement/BusinessManagement"
+import { BusinessCreated } from "../generated/BusinessManaagement/BusinessManaagement"
 
 export function createBusinessCreatedEvent(
   ID: BigInt,
