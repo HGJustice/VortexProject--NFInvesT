@@ -1,4 +1,4 @@
-import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManaagement/BusinessManaagement"
+import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManagement/BusinessManagement"
 import { BusinessCreated } from "../generated/schema"
 
 export function handleBusinessCreated(event: BusinessCreatedEvent): void {
