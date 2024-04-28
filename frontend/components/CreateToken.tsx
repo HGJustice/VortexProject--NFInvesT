@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { ethers } from "ethers";
+import TokenABI from "../ABI/FactoryContract.json";
+const ethers = require("ethers");
 
-const contractAddress = "";
-const ABI = "";
+const contractAddress = "0xdd796D528145000f1Df16995cDAaCe5eA6Cf39A6";
+const ABI = TokenABI;
 
 const CreateToken = () => {
   const [formData, setFormData] = useState({

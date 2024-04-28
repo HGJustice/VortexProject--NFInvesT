@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import ABI from "../ABI/MarketplaceContract.json";
 import { ethers } from "ethers";
 
-const contractAddreess = "";
-const ABI = "";
+const contractAddreess = "0xfDa9377106C66d6C312FA31648F1267e26153470";
 
 const DepositToken = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const DepositToken = () => {
   };
 
   const depositTokensHandler = async (event: any) => {
+    event.preventDefault();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
@@ -24,7 +25,7 @@ const DepositToken = () => {
 
   return (
     <div>
-      <h1>DepositToken</h1>
+      <h1>Deposit Token</h1>
       <form onSubmit={depositTokensHandler}>
         <input
           type="number"

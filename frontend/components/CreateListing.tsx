@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
+import ABI from "../ABI/MarketplaceContract.json";
 
-const contractAddress = "";
-const ABI = "";
+const contractAddress = "0xfDa9377106C66d6C312FA31648F1267e26153470";
 
 const CreateListing = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +15,7 @@ const CreateListing = () => {
   };
 
   const createListingHandler = async (event: any) => {
+    event.preventDefault();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { ethers } from "ethers";
+import BusinessABI from "../ABI/BusinessContract.json";
+const ethers = require("ethers");
 
-const contractAddress = "";
-const ABI = "";
+const contractAddress = "0x0A0E8290c4eBb871876Ad4E04110ca5DF023Ea4b";
+const ABI = BusinessABI;
 
 const CreateBusiness = () => {
   const [formData, setFormData] = useState({

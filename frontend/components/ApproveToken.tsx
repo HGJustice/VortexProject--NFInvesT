@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import ABI from "../ABI/MintedToken.json";
 import { ethers } from "ethers";
 
-const contractAddress = "";
-const ABI = "";
+const contractAddress = "0xA62034dd40A4B0a72Fe0D8befa7d1ECb43338fF2";
 
-const ApproveToken = () => {
+function ApproveToken() {
   const [formData, setFormData] = useState({
-    marketplaceContract: "",
+    marketplaceAddress: "",
     amount: 0,
   });
 
@@ -14,28 +14,28 @@ const ApproveToken = () => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const approveTokenHandler = async (event: any) => {
+  const approveHandel = async (event: any) => {
     event.preventDefault();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
     const contract = new ethers.Contract(contractAddress, ABI, signer);
     const tx = await contract.approve(
-      formData.marketplaceContract,
+      formData.marketplaceAddress,
       formData.amount
     );
     await tx.wait();
+    console.log("approved");
   };
-
   return (
     <div>
-      <h1>ApproveToken</h1>
-      <form onSubmit={approveTokenHandler}>
+      <h1>Approve token</h1>
+      <form onSubmit={approveHandel}>
         <input
           type="text"
-          name="marketplaceContract"
-          value={formData.marketplaceContract}
-          placeholder="marketplaceContract"
+          name="marketplaceAddress"
+          value={formData.marketplaceAddress}
+          placeholder="marketplace Address"
           onChange={handleInputChange}
         />
         <input
@@ -45,10 +45,10 @@ const ApproveToken = () => {
           placeholder="amount"
           onChange={handleInputChange}
         />
-        <button type="submit">Approve</button>
+        <button type="submit">approve</button>
       </form>
     </div>
   );
-};
+}
 
 export default ApproveToken;
