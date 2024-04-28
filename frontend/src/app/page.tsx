@@ -1,7 +1,12 @@
+"use client";
+import CreateBusiness from "../../components/CreateBusiness";
+
 export default function Home() {
   return (
     <main>
-      <div></div>
+      <div>
+        <CreateBusiness />
+      </div>
     </main>
   );
 }
