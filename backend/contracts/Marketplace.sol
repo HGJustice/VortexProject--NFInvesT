@@ -32,6 +32,8 @@ contract Marketplace is ReentrancyGuard {
     );
     event ListingBought(uint id, address buyer, uint price, uint amount);
 
+    uint256 purchaseFee = 0.00001 ether;
+    uint256 accumulatedFees = 0;
     address owner;
     Counters.Counter private currentListingId;
 
@@ -92,12 +94,15 @@ contract Marketplace is ReentrancyGuard {
 
         delete idToListings[tokenID];
         delete listings[current.tokenSeller][tokenID];
+        uint feesDeducted = msg.value - purchaseFee;
+        accumulatedFees += feesDeducted;
 
         bool sent = IERC20(current.tokenAddress).transfer(
             msg.sender,
             current.amount
         );
         require(sent, "transferfailed");
+
         payable(current.tokenSeller).transfer(msg.value);
 
         emit ListingBought(
@@ -112,5 +117,15 @@ contract Marketplace is ReentrancyGuard {
         Listing memory current = idToListings[tokenID];
         uint value = current.price.getConversionRate(priceFeed);
         return value;
+    }
+
+    function withdrawFees() external {
+        require(msg.sender == owner, "only owner can withdraw");
+        (bool sent, ) = payable(owner).call{value: accumulatedFees}("");
+        require(sent, "withdraw failed");
+    }
+
+    receive() external payable {
+        accumulatedFees += msg.value;
     }
 }
