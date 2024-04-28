@@ -7,12 +7,24 @@ library PriceConverter {
     function getPrice(
         AggregatorV3Interface priceFeed
     ) internal view returns (uint256) {
-        (, int256 answer, , , ) = priceFeed.latestRoundData();
-        return uint256(answer * 10000000000);
+        (
+            uint80 roundID,
+            int256 answer,
+            uint256 startedAt,
+            uint256 updatedAt,
+            uint80 answeredInRound
+        ) = priceFeed.latestRoundData();
+
+        require(answer > 0, "Invalid price data.");
+        require(updatedAt > 0, "Price update time is zero.");
+        require(startedAt > 0, "Price data start time is zero.");
+        require(answeredInRound >= roundID, "Stale price data.");
+
+        return uint256(answer) * 10000000000;
     }
 
     function getConversionRate(
-        uint256 ethAmount, //usd amount
+        uint256 ethAmount,
         AggregatorV3Interface priceFeed
     ) internal view returns (uint256) {
         uint256 ethPrice = getPrice(priceFeed);

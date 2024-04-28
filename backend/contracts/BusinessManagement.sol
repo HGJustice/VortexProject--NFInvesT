@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 contract BusinessManagement {
+    using Counters for Counters.Counter;
+
     struct Business {
         uint ID;
         string registrationDocuments;
@@ -26,7 +30,7 @@ contract BusinessManagement {
     );
 
     mapping(address => Business) userToBusiness;
-    uint currentBusinessID = 0;
+    Counters.Counter private currentBusinessID;
 
     function createBusiness(
         string memory _registrationDocuments,
@@ -37,9 +41,9 @@ contract BusinessManagement {
         string memory _anualReports,
         string memory _businessWebsite
     ) external {
-        currentBusinessID++;
+        currentBusinessID.increment();
         Business memory newBusiness = Business(
-            currentBusinessID,
+            currentBusinessID.current(),
             _registrationDocuments,
             _taxIDNumber,
             _proofOfAddress,
@@ -52,7 +56,7 @@ contract BusinessManagement {
 
         userToBusiness[msg.sender] = newBusiness;
         emit BusinessCreated(
-            currentBusinessID,
+            currentBusinessID.current(),
             _registrationDocuments,
             _taxIDNumber,
             _proofOfAddress,

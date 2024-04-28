@@ -3,12 +3,12 @@ pragma solidity 0.8.20;
 
 import "contracts/BusinessManagement.sol";
 import "contracts/BusinessToken.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract TokenFactory {
+contract TokenFactory is ReentrancyGuard {
     BusinessManagement private businessContract;
 
     mapping(address => address) tokenAddress;
-    mapping(address => uint8) balances;
 
     event TokenCreated(address businessOwner, address token);
 
@@ -16,7 +16,10 @@ contract TokenFactory {
         businessContract = BusinessManagement(BusinessAddress);
     }
 
-    function createToken(string memory name, string memory symbol) external {
+    function createToken(
+        string memory name,
+        string memory symbol
+    ) external nonReentrant {
         require(
             tokenAddress[msg.sender] == address(0),
             "User has already created a token."
@@ -27,14 +30,14 @@ contract TokenFactory {
         );
 
         BusinessToken newToken = new BusinessToken(name, symbol);
-        newToken.transfer(msg.sender, newToken.totalSupply());
-
         tokenAddress[msg.sender] = address(newToken);
-        balances[msg.sender] = 1;
+        bool sent = newToken.transfer(msg.sender, newToken.totalSupply());
+        require(sent, "token transfer failed");
+
         emit TokenCreated(msg.sender, address(newToken));
     }
 
-    function getTokens(address addy) external view returns (address) {
+    function getTokensAddress(address addy) external view returns (address) {
         return tokenAddress[addy];
     }
 
@@ -42,10 +45,8 @@ contract TokenFactory {
         address addy
     ) external view returns (string memory, string memory, uint256) {
         BusinessToken token = BusinessToken(tokenAddress[addy]);
-        return token.getTokenDetails(addy);
-    }
-
-    function getUserBalance(address addy) external view returns (uint8) {
-        return balances[addy];
+        (string memory name, string memory symbol, uint256 supply) = token
+            .getTokenDetails(addy);
+        return (name, symbol, supply);
     }
 }

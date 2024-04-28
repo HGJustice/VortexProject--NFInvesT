@@ -5,12 +5,15 @@ import "contracts/BusinessManagement.sol";
 import "contracts/TokenFactory.sol";
 import "contracts/PriceFeed.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Marketplace {
+contract Marketplace is ReentrancyGuard {
     BusinessManagement private businessContract;
     TokenFactory private tokenContract;
     AggregatorV3Interface private priceFeed;
     using PriceConverter for uint256;
+    using Counters for Counters.Counter;
 
     struct Listing {
         uint id;
@@ -30,7 +33,8 @@ contract Marketplace {
     event ListingBought(uint id, address buyer, uint price, uint amount);
 
     address owner;
-    uint currentListingId = 0;
+    Counters.Counter private currentListingId;
+
     mapping(address => mapping(uint => Listing)) listings;
     mapping(uint => Listing) idToListings;
 
@@ -45,7 +49,7 @@ contract Marketplace {
 
     function depositToken(uint amount) external {
         require(amount > 0, "invalid amount");
-        IERC20 token = IERC20(tokenContract.getTokens(msg.sender));
+        IERC20 token = IERC20(tokenContract.getTokensAddress(msg.sender));
         bool sent = token.transferFrom(msg.sender, address(this), amount);
         require(sent, "Token transfer failed");
     }
@@ -57,33 +61,43 @@ contract Marketplace {
             "you need business before listing"
         );
 
-        currentListingId++;
+        currentListingId.increment();
 
         Listing memory newListing = Listing(
-            currentListingId,
-            tokenContract.getTokens(msg.sender),
+            currentListingId.current(),
+            tokenContract.getTokensAddress(msg.sender),
             msg.sender,
             _tokenAmount,
             _price
         );
 
-        idToListings[currentListingId] = newListing;
-        listings[msg.sender][currentListingId] = newListing;
+        idToListings[currentListingId.current()] = newListing;
+        listings[msg.sender][currentListingId.current()] = newListing;
         emit ListingCreated(
-            currentListingId,
+            currentListingId.current(),
             msg.sender,
-            tokenContract.getTokens(msg.sender),
+            tokenContract.getTokensAddress(msg.sender),
             _price,
             _tokenAmount
         );
     }
 
-    function buyToken(uint tokenID) external payable {
-        // require(tokenID <= currentListingId, "invalid listing");
+    function buyToken(uint tokenID) external payable nonReentrant {
+        require(tokenID <= currentListingId.current(), "invalid listing");
         Listing storage current = idToListings[tokenID];
-        // require(msg.value >= current.price.getConversionRate(priceFeed), "invalid amount to buy share");
+        require(
+            msg.value >= current.price.getConversionRate(priceFeed),
+            "invalid amount to buy share"
+        );
 
-        IERC20(current.tokenAddress).transfer(msg.sender, current.amount);
+        delete idToListings[tokenID];
+        delete listings[current.tokenSeller][tokenID];
+
+        bool sent = IERC20(current.tokenAddress).transfer(
+            msg.sender,
+            current.amount
+        );
+        require(sent, "transferfailed");
         payable(current.tokenSeller).transfer(msg.value);
 
         emit ListingBought(
@@ -92,8 +106,11 @@ contract Marketplace {
             current.price,
             current.amount
         );
+    }
 
-        delete idToListings[tokenID];
-        delete listings[current.tokenSeller][tokenID];
+    function getListingPriceEth(uint tokenID) external view returns (uint256) {
+        Listing memory current = idToListings[tokenID];
+        uint value = current.price.getConversionRate(priceFeed);
+        return value;
     }
 }
