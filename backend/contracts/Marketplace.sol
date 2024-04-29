@@ -7,8 +7,9 @@ import "contracts/PriceFeed.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Marketplace is ReentrancyGuard {
+contract Marketplace is ReentrancyGuard, Ownable {
     BusinessManagement private businessContract;
     TokenFactory private tokenContract;
     AggregatorV3Interface private priceFeed;
@@ -34,14 +35,12 @@ contract Marketplace is ReentrancyGuard {
 
     uint256 purchaseFee = 0.00001 ether;
     uint256 accumulatedFees = 0;
-    address owner;
     Counters.Counter private currentListingId;
 
     mapping(address => mapping(uint => Listing)) listings;
     mapping(uint => Listing) idToListings;
 
     constructor(address businessAddy, address tokenAddress) {
-        owner = msg.sender;
         businessContract = BusinessManagement(businessAddy);
         tokenContract = TokenFactory(tokenAddress);
         priceFeed = AggregatorV3Interface(
@@ -119,9 +118,10 @@ contract Marketplace is ReentrancyGuard {
         return value;
     }
 
-    function withdrawFees() external {
-        require(msg.sender == owner, "only owner can withdraw");
-        (bool sent, ) = payable(owner).call{value: accumulatedFees}("");
+    function withdrawFees() external onlyOwner {
+        (bool sent, ) = payable(address(msg.sender)).call{
+            value: accumulatedFees
+        }("");
         require(sent, "withdraw failed");
     }
 

@@ -18,10 +18,14 @@ const CreateListing = () => {
     event.preventDefault();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-
     const contract = new ethers.Contract(contractAddress, ABI, signer);
-    const tx = await contract.listToken(formData.amount, formData.price);
+
+    const tx = await contract.approve(contractAddress, formData.amount);
     await tx.wait();
+    const tx2 = await contract.depositToken(formData.amount);
+    await tx2.wait();
+    const tx3 = await contract.listToken(formData.amount, formData.price);
+    await tx3.wait();
   };
 
   return (
