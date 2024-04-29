@@ -1,0 +1,14 @@
+type BusinessCreated @entity(immutable: true) {
+  id: Bytes!
+  ID: BigInt! # uint256
+  registrationDocuments: String! # string
+  taxIDNumber: String! # string
+  proofOfAddress: String! # string
+  bankAccountNumber: BigInt! # uint256
+  financialDocuments: String! # string
+  anualReports: String! # string
+  businessWebsite: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
