@@ -8,6 +8,7 @@ type BusinessCreated @entity(immutable: true) {
   financialDocuments: String! # string
   anualReports: String! # string
   businessWebsite: String! # string
+  businessLogo: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

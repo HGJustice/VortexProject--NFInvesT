@@ -1,6 +1,6 @@
 import { newMockEvent } from "matchstick-as"
 import { ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { BusinessCreated } from "../generated/BusinessManagement/BusinessManagement"
+import { BusinessCreated } from "../generated/Contract/Contract"
 
 export function createBusinessCreatedEvent(
   ID: BigInt,
@@ -10,7 +10,8 @@ export function createBusinessCreatedEvent(
   bankAccountNumber: BigInt,
   financialDocuments: string,
   anualReports: string,
-  businessWebsite: string
+  businessWebsite: string,
+  businessLogo: string
 ): BusinessCreated {
   let businessCreatedEvent = changetype<BusinessCreated>(newMockEvent())
 
@@ -59,6 +60,12 @@ export function createBusinessCreatedEvent(
     new ethereum.EventParam(
       "businessWebsite",
       ethereum.Value.fromString(businessWebsite)
+    )
+  )
+  businessCreatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "businessLogo",
+      ethereum.Value.fromString(businessLogo)
     )
   )
 

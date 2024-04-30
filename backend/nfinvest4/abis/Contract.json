@@ -49,6 +49,12 @@
         "internalType": "string",
         "name": "businessWebsite",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "businessLogo",
+        "type": "string"
       }
     ],
     "name": "BusinessCreated",

@@ -1,4 +1,4 @@
-import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManagement/BusinessManagement"
+import { BusinessCreated as BusinessCreatedEvent } from "../generated/Contract/Contract"
 import { BusinessCreated } from "../generated/schema"
 
 export function handleBusinessCreated(event: BusinessCreatedEvent): void {
@@ -13,6 +13,7 @@ export function handleBusinessCreated(event: BusinessCreatedEvent): void {
   entity.financialDocuments = event.params.financialDocuments
   entity.anualReports = event.params.anualReports
   entity.businessWebsite = event.params.businessWebsite
+  entity.businessLogo = event.params.businessLogo
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

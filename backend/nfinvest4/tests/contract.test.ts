@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { BigInt } from "@graphprotocol/graph-ts"
 import { BusinessCreated } from "../generated/schema"
-import { BusinessCreated as BusinessCreatedEvent } from "../generated/BusinessManagement/BusinessManagement"
-import { handleBusinessCreated } from "../src/business-management"
-import { createBusinessCreatedEvent } from "./business-management-utils"
+import { BusinessCreated as BusinessCreatedEvent } from "../generated/Contract/Contract"
+import { handleBusinessCreated } from "../src/contract"
+import { createBusinessCreatedEvent } from "./contract-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -25,6 +25,7 @@ describe("Describe entity assertions", () => {
     let financialDocuments = "Example string value"
     let anualReports = "Example string value"
     let businessWebsite = "Example string value"
+    let businessLogo = "Example string value"
     let newBusinessCreatedEvent = createBusinessCreatedEvent(
       ID,
       registrationDocuments,
@@ -33,7 +34,8 @@ describe("Describe entity assertions", () => {
       bankAccountNumber,
       financialDocuments,
       anualReports,
-      businessWebsite
+      businessWebsite,
+      businessLogo
     )
     handleBusinessCreated(newBusinessCreatedEvent)
   })
@@ -95,6 +97,12 @@ describe("Describe entity assertions", () => {
       "BusinessCreated",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "businessWebsite",
+      "Example string value"
+    )
+    assert.fieldEquals(
+      "BusinessCreated",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "businessLogo",
       "Example string value"
     )
 
