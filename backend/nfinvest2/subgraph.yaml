@@ -24,3 +24,46 @@ dataSources:
         - event: BusinessCreated(uint256,string,string,string,uint256,string,string,string)
           handler: handleBusinessCreated
       file: ./src/business-management.ts
+  - kind: ethereum
+    name: TokenFactory
+    network: scroll-sepolia
+    source:
+      address: "0xEF15A3F93E8D281afbb727928882A62Ceb0f6aa8"
+      abi: TokenFactory
+      startBlock: 4158041
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TokenCreated
+      abis:
+        - name: TokenFactory
+          file: ./abis/TokenFactory.json
+      eventHandlers:
+        - event: TokenCreated(address,address)
+          handler: handleTokenCreated
+      file: ./src/token-factory.ts
+  - kind: ethereum
+    name: Marketplace
+    network: scroll-sepolia
+    source:
+      address: "0xfDa9377106C66d6C312FA31648F1267e26153470"
+      abi: Marketplace
+      startBlock: 4098687
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ListingBought
+        - ListingCreated
+      abis:
+        - name: Marketplace
+          file: ./abis/Marketplace.json
+      eventHandlers:
+        - event: ListingBought(uint256,address,uint256,uint256)
+          handler: handleListingBought
+        - event: ListingCreated(uint256,address,address,uint256,uint256)
+          handler: handleListingCreated
+      file: ./src/marketplace.ts
