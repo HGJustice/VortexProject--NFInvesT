@@ -1,0 +1,8 @@
+# noinspection GraphQLUnresolvedReference
+query GetMarketplaceList($first: Int!) {
+    listingCreateds(first: $first) {
+        Marketplace_id
+        amount
+        price
+    }
+}

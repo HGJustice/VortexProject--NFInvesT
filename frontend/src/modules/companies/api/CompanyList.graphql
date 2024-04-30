@@ -1,0 +1,9 @@
+# noinspection GraphQLUnresolvedReference
+query GetCompanyList($first: Int!, $search: String) {
+    businessCreateds(first: $first, where: {registrationDocuments_contains_nocase: $search}) {
+        id
+        registrationDocuments
+        taxIDNumber
+        proofOfAddress
+    }
+}
