@@ -1,6 +1,5 @@
 type BusinessCreated @entity(immutable: true) {
-  id: Bytes!
-  ID: BigInt! # uint256
+  id: ID!
   registrationDocuments: String! # string
   taxIDNumber: String! # string
   proofOfAddress: String! # string
@@ -9,6 +8,48 @@ type BusinessCreated @entity(immutable: true) {
   anualReports: String! # string
   businessWebsite: String! # string
   businessLogo: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+type TokenCreated @entity(immutable: true) {
+  id: Bytes!
+  businessOwner: Bytes! # address
+  token: Bytes! # address
+  businessName: String! # string
+  name: String! # string
+  symbol: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+type ListingBought @entity(immutable: true) {
+  id: Bytes!
+  Marketplace_id: BigInt! # uint256
+  buyer: Bytes! # address
+  price: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ListingCreated @entity(immutable: true) {
+  id: Bytes!
+  Marketplace_id: BigInt! # uint256
+  seller: Bytes! # address
+  tokenAddy: Bytes! # address
+  price: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

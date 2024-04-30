@@ -3,6 +3,12 @@
     "BusinessManagement": {
       "address": "0x37Be7cc8bFC0d9efc1319b27D9a246adDa6E2485",
       "startBlock": 4163823
+    },
+    "TokenFactory": {
+      "address": "0x83B6BD93054E1650A786bCaF771e40E88881b097"
+    },
+    "Marketplace": {
+      "address": "0xd4dFfA1b6972Dd8Ec3e3Cc44D55Bb2118e293486"
     }
   }
 }
